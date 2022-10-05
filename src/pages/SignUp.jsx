@@ -5,6 +5,7 @@ import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase
 import {db} from '../firebase.config'
 import {doc, setDoc, serverTimestamp} from 'firebase/firestore'
 import {toast} from 'react-toastify'
+import Oauth from '../components/Oauth';
 
 function SignIn() {
 
@@ -41,8 +42,10 @@ function SignIn() {
       await setDoc(doc(db, 'users', user.uid), formDataCopy);
 
       navigate('/');
+
+      toast.success("Welcome! New User")
     } catch (e) {
-      toast.error('Something Went Wrong!')
+      toast.error(e.message)
     }
   }
 
@@ -80,6 +83,7 @@ function SignIn() {
           <button className="btn text-white" onClick={handleClick}>Sign Up</button>
         </div>
       </div>
+      <Oauth />
     </div>
   </div>
 </div>

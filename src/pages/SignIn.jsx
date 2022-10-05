@@ -3,6 +3,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import {FaUserTie, FaLock} from 'react-icons/fa'
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import {toast} from 'react-toastify'
+import Oauth from '../components/Oauth';
 
 function SignIn() {
 
@@ -14,6 +15,7 @@ function SignIn() {
   const navigate = useNavigate();
 
   const {email, password} = formData;
+  
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -28,6 +30,7 @@ function SignIn() {
       const user = userCredentials.user;
       if(user){
         navigate('/');
+        toast.success("Welcome Back!")
       }
     } catch (e) {
       toast.error("Bad User Credentials!")
@@ -63,10 +66,11 @@ function SignIn() {
           </label>
           </div>
         </div>
-        <div className="form-control mt-6">
+        <div className="form-control mt-5">
           <button className="btn text-white" onClick={handleClick}>Sign In</button>
         </div>
       </div>
+      <Oauth />
     </div>
   </div>
 </div>

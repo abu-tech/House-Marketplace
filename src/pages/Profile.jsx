@@ -1,8 +1,8 @@
 import {getAuth, updateProfile, updateEmail} from 'firebase/auth';
 import { updateDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase.config';
-import{useState, useEffect, useRef} from 'react';
-import {FaUserTie, FaLock, FaUser} from 'react-icons/fa'
+import{useState} from 'react';
+import {FaUserTie, FaUser} from 'react-icons/fa'
 import {toast} from 'react-toastify'
  
 function Profile() {
@@ -57,7 +57,7 @@ function Profile() {
   <div className="bg-base-200"><h1 className="font-bold text-4xl text-center pt-5">My Profile</h1></div>
   <div className="hero-content flex-col lg:flex-row-reverse mt-5">
   <div className="text-center lg:text-left">
-      <h1 className="text-5xl font-bold">Welcome!</h1>
+      <h1 className="text-3xl font-bold">Welcome!</h1>
       <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
   </div>
   <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
@@ -77,7 +77,7 @@ function Profile() {
         </div>
         <div className="flex-row justify-between form-control mt-6">
           <button className="btn text-white" onClick={handleEdit}>{changeDetails ? 'Cancel' : 'Edit'}</button>
-          <button className={changeDetails ? "btn text-white" : "btn text-white hidden"} onClick={updateDetails}>Save Details</button>
+          <button className={changeDetails ? "btn btn-ghost text-black bg-base-200" : "btn btn-ghost text-white hidden"} onClick={updateDetails}>Save Details</button>
         </div>
       </div>
     </div>
