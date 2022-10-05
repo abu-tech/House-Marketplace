@@ -20,6 +20,11 @@ body {
   box-sizing: border-box;
 }
 
+button {
+  /*  Remove focus around button */
+  outline:none;  
+}
+
 /* a {
   text-decoration: none;
   display: block;
