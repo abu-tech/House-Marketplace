@@ -1,13 +1,16 @@
 import {useState, useEffect} from 'react'
+import {useParams} from 'react-router-dom'
 import {collection, getDocs, query, where, orderBy, limit, startAfter} from 'firebase/firestore'
 import { db } from '../firebase.config'
 import { toast } from 'react-toastify'
 import Spinner from '../components/Spinner'
 import ListingItem from '../components/ListingItem'
 
-function Offers() {
+function Category() {
     const [listings, setListings] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const params = useParams();
 
     useEffect(() => {
         const fetchData = async ()=> {
@@ -17,7 +20,7 @@ function Offers() {
 
                 //create a query
                 const q = query(listingsRef,
-                    where('offer', '==', true),
+                    where('type', '==', params.categoryName),
                     orderBy('timestamp', 'desc'),
                     limit(10) 
                 )
@@ -41,12 +44,12 @@ function Offers() {
         }
 
         fetchData();
-    }, [])
+    }, [params.categoryName])
   return loading ? <Spinner /> : listings && listings.length > 0 ? 
   
     (
     <div className='bg-base-200 p-8'>
-        <h1 className='text-4xl font-bold text-center'>Special Offers</h1>
+        <h1 className='text-4xl font-bold text-center'>Places for {params.categoryName}</h1>
         <div className='grid grid-cols-1 justify-items-center md:grid-cols-2 xl:grid-cols-3 bg-base-200'>
             {
                 listings.map((listing) => (
@@ -58,8 +61,8 @@ function Offers() {
   )
 
    : (
-   <h1 className='h-screen font-bold text-center pt-10'>oops! There are no current offers :(</h1>
+   <h1 className='h-screen font-bold text-center pt-10'>oops! No Listing Pressent for this Category</h1>
    )
 }
 
-export default Offers
+export default Category
