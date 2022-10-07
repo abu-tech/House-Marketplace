@@ -2,8 +2,9 @@ import {getAuth, updateProfile, updateEmail} from 'firebase/auth';
 import { updateDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase.config';
 import{useState} from 'react';
-import {FaUserTie, FaUser} from 'react-icons/fa'
+import {FaUserTie, FaUser, FaHome} from 'react-icons/fa'
 import {toast} from 'react-toastify'
+import {Link} from 'react-router-dom'
  
 function Profile() {
   const [changeDetails, setChangeDetails] = useState(false);
@@ -78,6 +79,9 @@ function Profile() {
         <div className="flex-row justify-between form-control mt-6">
           <button className="btn text-white" onClick={handleEdit}>{changeDetails ? 'Cancel' : 'Edit'}</button>
           <button className={changeDetails ? "btn btn-ghost text-black bg-base-200" : "btn btn-ghost text-white hidden"} onClick={updateDetails}>Save Details</button>
+        </div>
+        <div className='mt-7 flex justify-center'>
+          <Link to='/create-listing' className='btn btn-ghost text-black bg-base-200 w-full'><span className='flex'><FaHome /><p className='mx-2'>Sell or Rent</p></span></Link>
         </div>
       </div>
     </div>
