@@ -41,7 +41,7 @@ function Navbar() {
         <li><Link to="/profile" className="font-semibold"><span onClick={document.activeElement.blur()}>Profile</span></Link></li>
       </ul>
     </div>
-    <a className="btn btn-ghost normal-case xl:text-xl md:text-md" href="/">House Marketplace</a>
+    <Link className="btn btn-ghost normal-case xl:text-xl md:text-md" to='/'>House Marketplace</Link>
   </div>
   <div className="navbar-center hidden lg:flex">
     <ul className="menu menu-horizontal p-0">   

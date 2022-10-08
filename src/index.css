@@ -2,7 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800;900&display=swap');
 * {
@@ -28,6 +34,21 @@ button {
 .btn {
   /*  Remove focus around button */
   outline:none;  
+}
+
+.formInputFile::-webkit-file-upload-button {
+  background-color: rgb(255, 255, 255);
+  border: none;
+  color: black;
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
+  border-radius: 1rem;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.formInputFile::-webkit-file-upload-button:hover{
+  background-color: rgb(224, 209, 209);
 }
 
 /* a {
