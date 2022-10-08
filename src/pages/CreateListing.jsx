@@ -101,8 +101,8 @@ function CreateListing() {
   
   return (
     <div className='bg-base-200'>
-        <form className='flex justify-center py-12' onSubmit={onSubmit}>
-        <div className="card flex flex-shrink-0 w-full max-w-lg shadow-xl bg-base-100">
+        <form className='flex justify-center py-12 px-5' onSubmit={onSubmit}>
+        <div className="card flex flex-shrink-0 w-full max-w-sm shadow-lg bg-base-100 md:max-w-xl">
         <h1 className='text-4xl font-bold text-center pt-5'>Create Listing</h1>
         <div className="card-body">
           <div className="form-control">
@@ -157,7 +157,7 @@ function CreateListing() {
             <label className="label">
               <span className="label-text font-semibold">Address</span>
             </label>
-            <textarea className="textarea textarea-bordered h-24 font-semibold" id="address" value={address} placeholder="Type here" onChange={onMutate} required></textarea>
+            <textarea className="textarea textarea-bordered h-24 font-semibold" id="address" value={address} placeholder="Address" onChange={onMutate} required></textarea>
           </div>
           <div className="form-control">
             <label className="label">
