@@ -18,6 +18,8 @@ function CreateListing() {
     offer: false,
     regularPrice: 0,
     discountedPrice: 0,
+    sharing: 'single',
+    food: 3,
     images: {},
     latitude: 0,
     longitude: 0
@@ -34,6 +36,8 @@ function CreateListing() {
     offer,
     regularPrice,
     discountedPrice,
+    sharing,
+    food,
     images,
     latitude,
     longitude
@@ -121,21 +125,41 @@ function CreateListing() {
             </label>
             <input type="text" placeholder="Name" id='name' className="input input-bordered font-semibold" value={name} onChange={onMutate} maxLength='30' required/>
           </div>
+          {type === 'pg' && (
+            <div className='flex flex-col md:flex-row'>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-semibold">Sharing</span>
+              </label>
+              <input type="text" id='sharing' className="input input-bordered font-semibold w-1/3 md:w-1/2" value={sharing} onChange={onMutate} required/>
+            </div>
+            <div className="form-control md:ml-12">
+                <label className="label">
+                  <span className="label-text font-semibold">Food</span>
+                </label>
+                <div className='flex'>
+                <input type="number" id='food' className="input input-bordered w-1/4 font-semibold" value={food} onChange={onMutate} required minLength='1' maxLength='50'/>
+                <p className='font-semibold flex items-center ml-3'>Times / Day</p>
+                </div>
+            </div>
+            </div>
+          )}
           <div className='flex'>
             <div className="form-control">
               <label className="label">
                 <span className="label-text font-semibold">Bedrooms</span>
               </label>
-              <input type="number" id='bedrooms' className="input input-bordered w-1/3" value={bedrooms} onChange={onMutate} required minLength='1' maxLength='50'/>
+              <input type="number" id='bedrooms' className="input input-bordered w-1/3 font-semibold" value={bedrooms} onChange={onMutate} required minLength='1' maxLength='50'/>
             </div>
             <div className="form-control">
             <label className="label">
               <span className="label-text font-semibold">Bathrooms</span>
             </label>
-            <input type="number" id='bathrooms' className="input input-bordered w-1/3" value={bathrooms} onChange={onMutate} required minLength='1' maxLength='50'/>
+            <input type="number" id='bathrooms' className="input input-bordered w-1/3 font-semibold" value={bathrooms} onChange={onMutate} required minLength='1' maxLength='50'/>
             </div>
           </div>
-          <div className="form-control">
+          <div className='flex flex-col md:flex-row'>
+          <div className="form-control my-1">
             <label className="label">
               <span className="label-text font-semibold">Parking Area</span>
             </label>
@@ -144,7 +168,7 @@ function CreateListing() {
               <button type='button' className={!parking ? "btn btn-active text-white mx-3" : "btn btn-ghost bg-base-200 mx-3"} id='parking' value={false} onClick={onMutate}>No</button>
             </div>
           </div>
-          <div className="form-control">
+          <div className="form-control my-1 md:ml-5">
             <label className="label">
               <span className="label-text font-semibold">Furnished</span>
             </label>
@@ -152,6 +176,7 @@ function CreateListing() {
               <button type='button' className={furnished ? "btn btn-active text-white" : "btn btn-ghost bg-base-200"} id='furnished' value={true} onClick={onMutate}>Yes</button>
               <button type='button' className={!furnished ? "btn btn-active text-white mx-3" : "btn btn-ghost bg-base-200 mx-3"} id='furnished' value={false} onClick={onMutate}>No</button>
             </div>
+          </div>
           </div>
           <div className="form-control">
             <label className="label">
@@ -174,7 +199,7 @@ function CreateListing() {
             </label>
             <div className='flex'>
               <input type="number" id='regularPrice' className="input input-bordered w-1/3 font-semibold" value={regularPrice} onChange={onMutate} required minLength='500' maxLength='1000000000'/>
-              {type === 'rent' && <p className='font-semibold flex items-center mx-2'> <FaRupeeSign /> / Month</p>}
+              {type === 'rent' || type === 'pg' && <p className='font-semibold flex items-center mx-2'> <FaRupeeSign /> / Month</p>}
             </div>
           </div>
           {offer && (
@@ -184,7 +209,7 @@ function CreateListing() {
             </label>
             <div className='flex'>
               <input type="number" id='discountedPrice' className="input input-bordered w-1/3 font-semibold" value={discountedPrice} onChange={onMutate} required minLength='500' maxLength='1000000000'/>
-              {type === 'rent' && <p className='font-semibold flex items-center mx-2'> <FaRupeeSign /> / Month</p>}
+              {type === 'rent' || type === 'pg' && <p className='font-semibold flex items-center mx-2'> <FaRupeeSign /> / Month</p>}
             </div>
           </div>
           )}
