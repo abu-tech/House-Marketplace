@@ -3,10 +3,11 @@ import {getAuth, onAuthStateChanged} from 'firebase/auth'
 import {useNavigate} from 'react-router-dom'
 import Spinner from '../components/Spinner'
 import {FaRupeeSign} from 'react-icons/fa'
+import {toast} from 'react-toastify'
 
 
 function CreateListing() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     type: 'rent',
     name: '',
@@ -94,12 +95,43 @@ function CreateListing() {
 
 }
   
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData)
+    setLoading(true);
+
+    if(discountedPrice >= regularPrice){
+      setLoading(false);
+      toast.info("Discounted Price must be smaller than Regular Price!")
+      return ;
+    }
+
+    if(images.length > 6){
+      setLoading(false);
+      toast.info("Max 6 Images Only!");
+      return ;
+    }
+
+    let geolocation ={};
+    let location;
+
+    const res = await fetch(`http://api.positionstack.com/v1/forward?access_key=${process.env.REACT_APP_MAP_API_KEY}&query=${address}`);
+    const data = await res.json();
+
+    geolocation.lat = data.data[0]?.latitude ?? 0;
+    geolocation.lng = data.data[0]?.longitude ?? 0;
+    location = address;
+
+    if(location === undefined || location.includes('undefined')){
+      setLoading(false)
+      toast.info('Please enter a correct address')
+      return
+  }
+    console.log(data);
+    console.log(geolocation.lat, geolocation.lng)
+    setLoading(false)
   }
 
-  if(!loading){
+  if(loading){
     return <Spinner />
   }  
   
