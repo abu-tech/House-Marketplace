@@ -1,9 +1,13 @@
 import {useState, useEffect, useRef} from 'react'
 import {getAuth, onAuthStateChanged} from 'firebase/auth'
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {db} from '../firebase.config'
+import {v4 as uuid} from 'uuid'
 import {useNavigate} from 'react-router-dom'
 import {FaRupeeSign} from 'react-icons/fa'
 import {toast} from 'react-toastify'
 import Loader from '../components/Loader'
+import { uuidv4 } from '@firebase/util';
 
 
 function CreateListing() {
@@ -105,9 +109,9 @@ function CreateListing() {
       return ;
     }
 
-    if(images.length > 6){
+    if(images.length > 4){
       setLoading(false);
-      toast.info("Max 6 Images Only!");
+      toast.info("Max 4 Images Only!");
       return ;
     }
 
@@ -128,6 +132,51 @@ function CreateListing() {
   }
     console.log(data);
     console.log(geolocation.lat, geolocation.lng)
+
+    //store image in firebase
+    const storeImg = async (image)=> {
+      return new Promise((resolve, reject) => {
+        const storage = getStorage();
+        const fileName = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`;
+        const storageRef = ref(storage, `images/${fileName}`);
+
+        const uploadTask = uploadBytesResumable(storageRef, image);
+
+        uploadTask.on('state_changed', 
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused');
+                break;
+              case 'running':
+                console.log('Upload is running');
+                break;
+            }
+          }, 
+          (error) => {
+            reject(error)
+          }, 
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              resolve(downloadURL);
+            });
+          }
+        );
+      })
+    }
+
+    //now run through loop to get the urls for the all the images
+    const imgUrls = await Promise.all(
+      [...images].map((image) => storeImg(image))
+    ).catch(() => {
+      setLoading(false);
+      toast.info("Images not uploaded!");
+      return;
+    })
+
+    console.log(imgUrls)
     setLoading(false)
   }
 
@@ -231,7 +280,7 @@ function CreateListing() {
             </label>
             <div className='flex'>
               <input type="number" id='regularPrice' className="input input-bordered w-1/3 font-semibold" value={regularPrice} onChange={onMutate} required minLength='500' maxLength='1000000000'/>
-              {type === 'rent' || type === 'pg' && <p className='font-semibold flex items-center mx-2'> <FaRupeeSign /> / Month</p>}
+              {(type === 'rent' || type === 'pg') && <p className='font-semibold flex items-center mx-2'> <FaRupeeSign /> / Month</p>}
             </div>
           </div>
           {offer && (
@@ -241,13 +290,13 @@ function CreateListing() {
             </label>
             <div className='flex'>
               <input type="number" id='discountedPrice' className="input input-bordered w-1/3 font-semibold" value={discountedPrice} onChange={onMutate} required minLength='500' maxLength='1000000000'/>
-              {type === 'rent' || type === 'pg' && <p className='font-semibold flex items-center mx-2'> <FaRupeeSign /> / Month</p>}
+              {(type === 'rent' || type === 'pg') && <p className='font-semibold flex items-center mx-2'> <FaRupeeSign /> / Month</p>}
             </div>
           </div>
           )}
           <div className="form-control flex justify-center">
             <label className="label">
-              <span className="label-text font-semibold">Images (Max: 6)</span>
+              <span className="label-text font-semibold">Images (Max: 4)</span>
             </label>
             <input className="
             formInputFile
