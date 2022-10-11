@@ -1,9 +1,9 @@
 import {useState, useEffect, useRef} from 'react'
 import {getAuth, onAuthStateChanged} from 'firebase/auth'
 import {useNavigate} from 'react-router-dom'
-import Spinner from '../components/Spinner'
 import {FaRupeeSign} from 'react-icons/fa'
 import {toast} from 'react-toastify'
+import Loader from '../components/Loader'
 
 
 function CreateListing() {
@@ -132,7 +132,7 @@ function CreateListing() {
   }
 
   if(loading){
-    return <Spinner />
+    return <Loader />
   }  
   
   return (
