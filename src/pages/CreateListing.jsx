@@ -2,6 +2,7 @@ import {useState, useEffect, useRef} from 'react'
 import {getAuth, onAuthStateChanged} from 'firebase/auth'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import {db} from '../firebase.config'
+import { addDoc, serverTimestamp, collection } from 'firebase/firestore';
 import {v4 as uuid} from 'uuid'
 import {useNavigate} from 'react-router-dom'
 import {FaRupeeSign} from 'react-icons/fa'
@@ -26,8 +27,6 @@ function CreateListing() {
     sharing: 'single',
     food: 3,
     images: {},
-    latitude: 0,
-    longitude: 0
   });
 
   const {
@@ -43,9 +42,7 @@ function CreateListing() {
     discountedPrice,
     sharing,
     food,
-    images,
-    latitude,
-    longitude
+    images
   } = formData;
 
   const auth = getAuth();
@@ -131,10 +128,9 @@ function CreateListing() {
       return
   }
     console.log(data);
-    console.log(geolocation.lat, geolocation.lng)
 
     //store image in firebase
-    const storeImg = async (image)=> {
+    const storeImg = async (image) => {
       return new Promise((resolve, reject) => {
         const storage = getStorage();
         const fileName = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`;
@@ -168,7 +164,8 @@ function CreateListing() {
     }
 
     //now run through loop to get the urls for the all the images
-    const imgUrls = await Promise.all(
+
+    const imageUrls = await Promise.all(
       [...images].map((image) => storeImg(image))
     ).catch(() => {
       setLoading(false);
@@ -176,8 +173,25 @@ function CreateListing() {
       return;
     })
 
-    console.log(imgUrls)
-    setLoading(false)
+    
+    const Data = {
+      ...formData,
+      imageUrls,
+      geolocation,
+      timestamp: serverTimestamp()
+    }
+
+    delete Data.images;
+    delete Data.address;
+    location && (Data.location = location);
+    !Data.offer && (delete Data.discountedPrice);
+    Data.type !== 'pg' && delete Data.food;
+    Data.type !== 'pg' && delete Data.sharing;
+
+    const docRef = await addDoc(collection(db, 'listings'), Data);
+    setLoading(false);
+    toast.success("Listing Created!");
+    navigate(`/category/${Data.type}/${docRef.id}`);
   }
 
   if(loading){

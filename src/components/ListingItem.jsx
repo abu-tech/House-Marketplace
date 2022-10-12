@@ -13,7 +13,7 @@ function ListingItem({listing, id, onDelete}) {
                 <h2 className="card-title">{listing.name}</h2>
                 <span className="flex justify-start font-semibold"><IoLocationSharp /><p className='mx-2'>{listing.location}</p></span>
                 <span className="flex font-semibold"><RiHotelBedFill /><p className='mx-2'>{listing.bedrooms} {listing.bedrooms > 1 ? 'Bedrooms' : 'Bedroom'}</p></span>
-                <span className="flex font-semibold"><MdBathtub /><p className='mx-2'>{listing.bathrooms} {listing.bathrooms > 1 ? 'bathrooms' : 'Bedroom'}</p></span>
+                <span className="flex font-semibold"><MdBathtub /><p className='mx-2'>{listing.bathrooms} {listing.bathrooms > 1 ? 'bathrooms' : 'Bathroom'}</p></span>
                 <span className="flex justify-start font-semibold"><FaRupeeSign /><p className='mx-2'>{listing.offer ? listing.discountedPrice.toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ',') : listing.regularPrice.toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{listing.type === 'rent' ? ' / Month' : ''}</p></span>
