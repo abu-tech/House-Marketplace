@@ -115,14 +115,15 @@ function CreateListing() {
     let geolocation ={};
     let location;
 
-    const res = await fetch(`http://api.positionstack.com/v1/forward?access_key=${process.env.REACT_APP_MAP_API_KEY}&query=${address}`);
+    const res = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${process.env.REACT_APP_MAP_API_KEY}&country=in&limit=1`);
     const data = await res.json();
+    console.log(data);
 
-    geolocation.lat = data.data[0]?.latitude ?? 0;
-    geolocation.lng = data.data[0]?.longitude ?? 0;
+    geolocation.lat = data.features[0]?.geometry.coordinates[1] ?? 0;
+    geolocation.lng = data.features[0]?.geometry.coordinates[0] ?? 0;
     location = address;
 
-    if(location === undefined || location.includes('undefined')){
+    if(data.features.length === 0){
       setLoading(false)
       toast.info('Please enter a correct address')
       return
@@ -183,7 +184,7 @@ function CreateListing() {
 
     delete Data.images;
     delete Data.address;
-    location && (Data.location = location);
+    Data.location = location;
     !Data.offer && (delete Data.discountedPrice);
     Data.type !== 'pg' && delete Data.food;
     Data.type !== 'pg' && delete Data.sharing;
