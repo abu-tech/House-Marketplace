@@ -3,12 +3,11 @@ import {getAuth, onAuthStateChanged} from 'firebase/auth'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import {db} from '../firebase.config'
 import { addDoc, serverTimestamp, collection } from 'firebase/firestore';
-import {v4 as uuid} from 'uuid'
+import {v4 as uuidv4} from 'uuid'
 import {useNavigate} from 'react-router-dom'
 import {FaRupeeSign} from 'react-icons/fa'
 import {toast} from 'react-toastify'
 import Loader from '../components/Loader'
-import { uuidv4 } from '@firebase/util';
 
 
 function CreateListing() {
