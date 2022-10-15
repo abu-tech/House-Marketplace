@@ -62,7 +62,7 @@ function Listing() {
           listing.regularPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{listing.type === 'rent' ? ' / Month' : ''}</p></span>
           {auth.currentUser?.uid !== listing.userRef && (
             <div className="card-actions my-2">
-              <Link to={`/contact/${listing.userRef}?listingName=${listing.name}&listingLocation=${listing.location}`} className="btn btn-outline">Contact Owner</Link>
+              <Link to={`/contact/${listing.userRef}?listingName=${listing.name}`} className="btn btn-outline">Contact Owner</Link>
             </div>
           )}
         </div>
