@@ -43,7 +43,7 @@ function Listing() {
     }
 
   return (
-    <div className='p-12 bg-base-100 grid grid-cols-1 lg:grid-cols-2 lg:gap-2'>
+    <div className='p-12 bg-base-100 grid grid-cols-1 lg:grid-cols-2'>
       <div className='bg-base-100 h-screen'>
         <div className='card-body'>
           <div className='flex justify-between'><h1 className='font-bold text-md sm:text-2xl '>{listing.name}</h1><button type='button' className="btn btn-circle btn-outline" onClick={handleShare}><BsShareFill /></button>
