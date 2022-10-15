@@ -49,7 +49,7 @@ function Category() {
   
     (
     <div className='bg-base-200 p-8'>
-        <h1 className='text-4xl font-bold text-center'>Places for {params.categoryName}</h1>
+        <h1 className='text-4xl font-bold text-center'>Places for {params.categoryName[0].toUpperCase()+params.categoryName.slice(1)}</h1>
         <div className='grid grid-cols-1 justify-items-center md:grid-cols-2 xl:grid-cols-3 bg-base-200'>
             {
                 listings.map((listing) => (

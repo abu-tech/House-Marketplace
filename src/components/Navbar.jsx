@@ -1,4 +1,4 @@
-import {useLocation, Link, useNavigate} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {getAuth} from 'firebase/auth';
 import {useAuthStatus} from '../hooks/useAuthStatus'
 import {toast} from 'react-toastify'
@@ -7,20 +7,9 @@ import {toast} from 'react-toastify'
 
 
 function Navbar() {
-    const location = useLocation();
     const navigate = useNavigate();
     const auth = getAuth();
     const {loggedIn, setLoggedIn} = useAuthStatus();
-    const pathMatch = (route) => {
-        if(route === location.pathname)
-        return true;
-    }
-    // if(checkingStatus){
-    //   setTimeout(()=>{
-
-    //   }, 2000)
-    // }
-
     const handleSignout = async ()=> {
       await auth.signOut();
       setLoggedIn(false);
@@ -45,9 +34,9 @@ function Navbar() {
   </div>
   <div className="navbar-center hidden lg:flex">
     <ul className="menu menu-horizontal p-0">   
-        <li className="mx-3"><Link className={pathMatch('/') ? "btn btn-ghost underline decoration-2" : "btn btn-ghost"} to="/">Explore</Link></li>
-        <li className="mx-3"><Link className={pathMatch('/offers') ? "btn btn-ghost underline decoration-2" : "btn btn-ghost"} to="/offers">Offers</Link></li>
-        <li className="mx-3"><Link className={pathMatch('/profile') ? "btn btn-ghost underline decoration-2" : "btn btn-ghost"}to="/profile">Profile</Link></li>
+        <li className="mx-3"><Link className="btn btn-ghost" to="/">Explore</Link></li>
+        <li className="mx-3"><Link className="btn btn-ghost" to="/offers">Offers</Link></li>
+        <li className="mx-3"><Link className="btn btn-ghost"to="/profile">Profile</Link></li>
     </ul>
   </div>
   <div className="navbar-end">
