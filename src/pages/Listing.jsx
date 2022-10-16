@@ -19,6 +19,7 @@ function Listing() {
 
     const auth = getAuth();
     const params = useParams();
+    let n;
     useEffect(() => {
         const fetchListing = async () => {
             const docRef = doc(db, 'listings', params.id);
@@ -29,7 +30,7 @@ function Listing() {
                 setLoading(false);
             }
         }
-
+       n = listing.imageUrls.length;
         fetchListing();
     }, [params.id]);
 
@@ -43,10 +44,10 @@ function Listing() {
     }
 
   return (
-    <div className='p-12 bg-base-100 grid grid-cols-1 lg:grid-cols-2'>
-      <div className='bg-base-100 h-screen'>
+    <div className='p-10 bg-base-100 grid grid-cols-1 lg:grid-cols-2'>
+      <div className='bg-base-100'>
         <div className='card-body'>
-          <div className='flex justify-between'><h1 className='font-bold text-md sm:text-2xl '>{listing.name}</h1><button type='button' className="btn btn-circle btn-outline" onClick={handleShare}><BsShareFill /></button>
+          <div className='flex justify-between'><h1 className='font-bold text-md sm:text-2xl'>{listing.name}</h1><button type='button' className="btn btn-circle btn-outline" onClick={handleShare}><BsShareFill /></button>
           </div>
           <div className='flex flex-end mb-5'>
           <span className="badge mr-2 text-white text-xs sm:text-sm"><FaRupeeSign/>{listing.offer ? listing.regularPrice-listing.discountedPrice : 'No'} Discount</span>
@@ -68,8 +69,25 @@ function Listing() {
           )}
         </div>
       </div>
-      <div>
-        <Mapbox lat={listing.geolocation.lat} lng={listing.geolocation.lng} />
+      <div className='flex flex-col'>
+        <div className='flex w-full h-full mb-6'>
+          <Mapbox lat={listing.geolocation.lat} lng={listing.geolocation.lng} />
+        </div>
+        <div>
+          <div className="carousel w-full">
+            {
+              listing.imageUrls.forEach((img, i) => {
+                <div id={`slide${i+1}`} className="carousel-item relative w-full">
+                  <img src={img} alt="" className="w-full" />
+                  <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                    <a href={`slide${(i+1) === 1 ? n : i}`} className="btn btn-circle">❮</a> 
+                    <a href={`slide${(i+1)%n + 1}`} className="btn btn-circle">❯</a>
+                  </div>
+                </div>
+              })
+            }
+          </div>
+        </div>
       </div>
     </div>
   )

@@ -8,7 +8,7 @@ function Mapbox({lng, lat}) {
         latitude: lat,
         zoom: 8
         }}
-        style={{width: '58em', height: '23em'}}
+        style={{width: '100%', height: '300px'}}
         mapboxAccessToken={process.env.REACT_APP_MAP_API_KEY}
         mapStyle="mapbox://styles/mapbox/streets-v9"
         projection= 'globe'
