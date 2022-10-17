@@ -4,7 +4,6 @@ import {IoLocationSharp, IoFastFood} from 'react-icons/io5'
 import {FaRupeeSign} from 'react-icons/fa'
 import {MdBathtub} from 'react-icons/md'
 import {BsPeopleFill} from 'react-icons/bs'
-import {AiTwotoneDelete} from 'react-icons/ai'
 
 function ListingItem({listing, id, onDelete}) {
   return (
@@ -22,7 +21,6 @@ function ListingItem({listing, id, onDelete}) {
                 }
                 <div className="card-actions justify-end">
                     <Link to={`/category/${listing.type}/${id}`} className="btn text-white">View Details</Link>
-                    {onDelete && (<button className="btn btn-square"><AiTwotoneDelete /></button>)} 
                 </div>
             </div>
     </div>

@@ -12,6 +12,9 @@ import {GiSofa} from 'react-icons/gi'
 import {BsPeopleFill, BsShareFill} from 'react-icons/bs'
 import {toast} from 'react-toastify'
 import Mapbox from '../components/Mapbox'
+import { Navigation, Pagination, Scrollbar, A11y, Autoplay, EffectCube } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css/bundle';
 
 function Listing() {
     const [listing, setListing] = useState(null);
@@ -30,7 +33,7 @@ function Listing() {
                 setLoading(false);
             }
         }
-       n = listing.imageUrls.length;
+      //  n = listing.imageUrls.length;
         fetchListing();
     }, [params.id]);
 
@@ -46,6 +49,26 @@ function Listing() {
   return (
     <div className='p-10 bg-base-100 grid grid-cols-1 lg:grid-cols-2'>
       <div className='bg-base-100'>
+          <Swiper
+           slidesPerView={1}
+           pagination={{clickable: true}}
+           style={{ height: '300px', width: '90%' }}
+           modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay, EffectCube]}
+           effect='cube'
+           navigation
+           autoplay={{
+            delay: 2000,
+            disableOnInteraction: false,
+           }}
+           >
+            {
+              listing.imageUrls.map((url, i) => (
+                  <SwiperSlide key={i}>
+                    <div className='swiperSlideDiv' style={{background: `url(${listing.imageUrls[i]}) center no-repeat`, backgroundSize: 'cover'}}></div>
+                  </SwiperSlide>
+              ))
+            }
+          </Swiper>
         <div className='card-body'>
           <div className='flex justify-between'><h1 className='font-bold text-md sm:text-2xl'>{listing.name}</h1><button type='button' className="btn btn-circle btn-outline" onClick={handleShare}><BsShareFill /></button>
           </div>
@@ -72,21 +95,6 @@ function Listing() {
       <div className='flex flex-col'>
         <div className='flex w-full h-full mb-6'>
           <Mapbox lat={listing.geolocation.lat} lng={listing.geolocation.lng} />
-        </div>
-        <div>
-          <div className="carousel w-full">
-            {
-              listing.imageUrls.forEach((img, i) => {
-                <div id={`slide${i+1}`} className="carousel-item relative w-full">
-                  <img src={img} alt="" className="w-full" />
-                  <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                    <a href={`slide${(i+1) === 1 ? n : i}`} className="btn btn-circle">❮</a> 
-                    <a href={`slide${(i+1)%n + 1}`} className="btn btn-circle">❯</a>
-                  </div>
-                </div>
-              })
-            }
-          </div>
         </div>
       </div>
     </div>
