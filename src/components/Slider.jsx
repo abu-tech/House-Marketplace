@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
-import { Navigation, Pagination, Scrollbar, A11y, EffectFade, Autoplay } from 'swiper';
+import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css/bundle';
 import {collection, getDocs, query, orderBy, limit} from 'firebase/firestore'
@@ -51,9 +51,8 @@ function Slider() {
            slidesPerView={1}
            pagination={{clickable: true}}
            style={{ height: '300px', width: '90%' }}
-           modules={[Navigation, Pagination, Scrollbar, A11y, EffectFade, Autoplay]}
+           modules={[Navigation, Pagination, Scrollbar, A11y,Autoplay]}
            navigation
-           effect='fade'
            autoplay={{
             delay: 2000,
             disableOnInteraction: false,

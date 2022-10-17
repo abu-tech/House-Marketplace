@@ -7,6 +7,7 @@ import {toast} from 'react-toastify'
 import {Link} from 'react-router-dom'
 import Loader from '../components/Loader'
 import ProfileListingItem from '../components/ProfileListingItem';
+import { getStorage, ref, deleteObject } from "firebase/storage";
  
 function Profile() {
   const [changeDetails, setChangeDetails] = useState(false);
@@ -29,6 +30,40 @@ function Profile() {
       ...prevState,
       [e.target.id]: e.target.value
     }))
+  }
+
+  const onDelete = async (listingId) => {
+    const storage = getStorage();
+    const imagesToDelete = listings.filter((listing) => listing.id === listingId);
+    const imagesArray = imagesToDelete[0].data.imageUrls;
+
+    imagesArray.forEach((urlToDelete) => {
+      //Get the filename from the upload URL
+      let fileName = urlToDelete.split('/').pop().split('#')[0].split('?')[0];
+      // Replace "%2F" in the URL with "/"
+      fileName = fileName.replace('%2F', '/');
+
+      const imageToDeleteRef = ref(storage, `${fileName}`);
+
+      //Delete the file
+      deleteObject(imageToDeleteRef)
+        .catch((error) => {
+          console.log(error)
+          toast.error('Failed to delete images');
+        });
+    });
+
+    try {
+      setLoading(true)
+      const docRef = doc(db, 'listings', listingId);
+      await deleteDoc(docRef);
+      const updatedListings = listings.filter((listing) => listing.id !== listingId);
+      setLoading(false);
+      setListings(updatedListings);
+      toast.success("Sucessfully deleted!")
+    } catch (e) {
+      toast.info("Something Went Wrong!")
+    }
   }
 
   useEffect(() => {
@@ -123,15 +158,19 @@ function Profile() {
                 </div>
               </div>
               <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:mx-10 xl:grid-cols-3 ">
-                {!loading && listings?.length > 0 && (
+                {(!loading && listings?.length > 0) ? (
                   <>
                     {listings.map((listing) => (
                       <ProfileListingItem
                       key={listing.id}
                       id={listing.id}
-                      listing={listing.data}/>
+                      listing={listing.data}
+                      onDelete={() => onDelete(listing.id)}
+                      />
                     ))}
                   </>
+                ) : (
+                    <h1 className='text-2xl font-bold'>No Listings!</h1>
                 )}
               </div>
           </div>

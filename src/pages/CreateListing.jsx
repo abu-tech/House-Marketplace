@@ -116,7 +116,6 @@ function CreateListing() {
 
     const res = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${process.env.REACT_APP_MAP_API_KEY}&country=in&limit=1`);
     const data = await res.json();
-    console.log(data);
 
     geolocation.lat = data.features[0]?.geometry.coordinates[1] ?? 0;
     geolocation.lng = data.features[0]?.geometry.coordinates[0] ?? 0;
