@@ -1,4 +1,4 @@
-import Map, {Marker, Popup}  from 'react-map-gl';
+import Map, {Marker}  from 'react-map-gl';
 
 function Mapbox({lng, lat}) {
   return (

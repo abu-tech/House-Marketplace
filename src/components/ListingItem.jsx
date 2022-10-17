@@ -5,7 +5,7 @@ import {FaRupeeSign} from 'react-icons/fa'
 import {MdBathtub} from 'react-icons/md'
 import {BsPeopleFill} from 'react-icons/bs'
 
-function ListingItem({listing, id, onDelete}) {
+function ListingItem({listing, id}) {
   return (
     <div className="card card-compact w-80 bg-base-100 m-8 md:w-96 hover:shadow-2xl transition duration-150 ease-out hover:ease-in">
             <figure><img src={listing.imageUrls[0]} alt={listing.name} className='h-64'/></figure>

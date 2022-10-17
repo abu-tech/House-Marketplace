@@ -22,7 +22,6 @@ function Listing() {
 
     const auth = getAuth();
     const params = useParams();
-    let n;
     useEffect(() => {
         const fetchListing = async () => {
             const docRef = doc(db, 'listings', params.id);
@@ -33,7 +32,6 @@ function Listing() {
                 setLoading(false);
             }
         }
-      //  n = listing.imageUrls.length;
         fetchListing();
     }, [params.id]);
 
