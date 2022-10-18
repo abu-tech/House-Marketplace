@@ -126,7 +126,6 @@ function CreateListing() {
       toast.info('Please enter a correct address')
       return
   }
-    console.log(data);
 
     //store image in firebase
     const storeImg = async (image) => {

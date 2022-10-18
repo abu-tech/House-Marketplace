@@ -158,7 +158,6 @@ function EditListing() {
       toast.info('Please enter a correct address')
       return
   }
-    console.log(data);
 
     //store image in firebase
     const storeImg = async (image) => {
@@ -198,18 +197,68 @@ function EditListing() {
 
     //now run through loop to get the urls for the all the images
 
-    const imageUrls = await Promise.all(
-      [...images].map((image) => storeImg(image))
-    ).catch(() => {
+     //edit images
+    const availableImageStorage = 4 - listing.imageUrls.length + imagesToRemove.length;
+    if (images && images.length > availableImageStorage) {
       setLoading(false);
-      toast.info("Images not uploaded!");
+      toast.error('Image Upload failed - Too many total images for this listing');
       return;
-    })
+    }
+
+    let newImageUrls;
+      if (images) {
+        newImageUrls = await Promise.all(
+          [...images].map((image) => storeImg(image))
+        ).catch(() => {
+          setLoading(false);
+          toast.error('Images not uploaded');
+          return;
+        });
+      }
+
+    //delete image funtcion
+    const deleteImage = async (imgUrl) => {
+      // Split Url to get the filename in the middle
+      let fileName = imgUrl.split('images%2F');
+      fileName = fileName[1].split('?alt');
+      fileName = fileName[0];
+ 
+      const storage = getStorage();
+ 
+      // Create a reference to the file to delete
+      const imgRef = ref(storage, `images/${fileName}`);
+ 
+      // Returns a promise
+      return deleteObject(imgRef);
+    };
+
+    imagesToRemove.forEach(async (imgUrl) => {
+      await deleteImage(imgUrl) // Handle the returned promise
+        .catch((error) => {
+          console.log(error);
+          toast.error('Deletion failed');
+          setLoading(false);
+        });
+    });
+
+    //Remove all imagesToRemove from current imageUrls for this listing
+    const remainingListingImages = listing.imageUrls.filter(
+      (val) => !imagesToRemove.includes(val)
+    );
+
+    //merge new and remaining images urls
+    let mergedImageUrls;
+    if (newImageUrls) {
+      mergedImageUrls = [...remainingListingImages, ...newImageUrls];
+    } else {
+      mergedImageUrls = [...remainingListingImages];
+    }
+
 
     
     const Data = {
       ...formData,
-      imageUrls,
+      imageUrls: mergedImageUrls,
       geolocation,
       timestamp: serverTimestamp()
     }
@@ -223,10 +272,21 @@ function EditListing() {
 
     //update doc
     const docRef = doc(db, 'listings', params.listingId);
-    await updateDoc(docRef, formData)
+    await updateDoc(docRef, Data)
     setLoading(false);
     toast.success("Listing Edited!");
     navigate(`/category/${Data.type}/${docRef.id}`);
+  }
+
+  const handleEditImgChange = (e) => {
+    if(e.target.checked){
+      setImagesToRemove([...imagesToRemove, e.target.value]);
+    }
+    else{
+      setImagesToRemove((current) => current.filter((url) => {
+        return url !== e.target.value
+      }));
+    }
   }
 
   if(loading){
@@ -347,7 +407,7 @@ function EditListing() {
             <label className="label">
               <span className="label-text font-semibold">Listing images</span>
             </label>
-            <p style={{ paddingLeft: '5px', fontSize: '0.8rem' }} className="mb-2">
+            <p style={{ paddingLeft: '5px', fontSize: '0.8rem' }} className="mb-2 font-medium">
               DELETE: Check the box of each image you wish to delete
             </p>
             <div className="editListingImgContainer">
@@ -368,7 +428,7 @@ function EditListing() {
                     id="imageDelete"
                     name="imageDelete"
                     value={img}
-                    // onChange={}
+                    onChange={handleEditImgChange}
                   />
                 </div>
               ))}
