@@ -78,7 +78,7 @@ function Category() {
                 })
             })
 
-            setListings((prevState) => [...prevState, listings]);
+            setListings((prevState) => [...prevState, ...listings]);
             setLoading(false);
         } catch (e) {
             toast.info("Could'nt Fetch The Data!")

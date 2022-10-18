@@ -8,6 +8,7 @@ import ListingItem from '../components/ListingItem'
 function Offers() {
     const [listings, setListings] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [lastFetched, setLastFetched] = useState(null);
 
     useEffect(() => {
         const fetchData = async ()=> {
@@ -19,11 +20,13 @@ function Offers() {
                 const q = query(listingsRef,
                     where('offer', '==', true),
                     orderBy('timestamp', 'desc'),
-                    limit(10) 
+                    limit(2) 
                 )
 
                 //execute a  query
                 const querySnap = await getDocs(q);
+                const lastVisible = querySnap.docs[querySnap.docs.length-1];
+                setLastFetched(lastVisible);
 
                 let listings = [];
                 querySnap.forEach((doc) => {
@@ -42,6 +45,43 @@ function Offers() {
 
         fetchData();
     }, [])
+
+    //pagination
+    const loadMore = async ()=> {
+        try {
+            //get a reference
+            const listingsRef = collection(db, 'listings');
+
+            //create a query
+            const q = query(listingsRef,
+                where('offer', '==', true),
+                orderBy('timestamp', 'desc'),
+                startAfter(lastFetched),
+                limit(3) 
+            )
+
+            //execute a  query
+            const querySnap = await getDocs(q);
+
+            const lastVisible = querySnap.docs[querySnap.docs.length-1];
+            setLastFetched(lastVisible);
+
+            let listings = [];
+            querySnap.forEach((doc) => {
+                listings.push({
+                    id: doc.id,
+                    data: doc.data()
+                })
+            })
+
+            setListings((prevState) => [...prevState, ...listings]);
+            setLoading(false);
+        } catch (e) {
+            toast.info("Could'nt Fetch The Data!")
+        }
+    }
+
+
   return loading ? <Spinner /> : listings && listings.length > 0 ? 
   
     (
@@ -54,6 +94,10 @@ function Offers() {
                 ))
             }
         </div>
+        {lastFetched && (
+        <div className='flex justify-center'>
+            <button type='button' className="btn btn-outline btn-sm rounded-2xl text-xs" onClick={loadMore}>Load More</button>
+        </div>)}
     </div>
   )
 
