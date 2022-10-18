@@ -9,6 +9,7 @@ import Loader from '../components/Loader'
 function Contact() {
     const [landlord, setLandlord] = useState(null)
     const [message, setMessage] = useState('')
+    //eslint-disable-next-line
     const [searchParams, setSearchParams] = useSearchParams()
     const [loading, setLoading] = useState(true);
 

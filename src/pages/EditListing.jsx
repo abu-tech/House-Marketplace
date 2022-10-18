@@ -1,17 +1,19 @@
 import {useState, useEffect, useRef} from 'react'
 import {getAuth, onAuthStateChanged} from 'firebase/auth'
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import {db} from '../firebase.config'
-import { addDoc, serverTimestamp, collection } from 'firebase/firestore';
+import {doc, updateDoc, getDoc,serverTimestamp} from 'firebase/firestore';
 import {v4 as uuidv4} from 'uuid'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import {FaRupeeSign} from 'react-icons/fa'
 import {toast} from 'react-toastify'
 import Loader from '../components/Loader'
 
 
-function CreateListing() {
+function EditListing() {
   const [loading, setLoading] = useState(false);
+  const [listing, setListing] = useState(null);
+  const [imagesToRemove, setImagesToRemove] = useState([]); 
   const [formData, setFormData] = useState({
     type: 'rent',
     name: '',
@@ -46,7 +48,37 @@ function CreateListing() {
 
   const auth = getAuth();
   const navigate = useNavigate();
+  const params = useParams();
   const isMounted = useRef(true);
+
+  //redirect if listing is not user's
+  useEffect(() => {
+    if(listing && auth.currentUser.uid !== listing.userRef){
+      navigate('/');
+      toast.info("You cannot Edit!")
+    }
+  })
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchListing = async () => {
+      const docRef = doc(db, 'listings', params.listingId);
+      const docSnap = await getDoc(docRef);
+
+      if(docSnap.exists()){
+        setListing(docSnap.data());
+        setFormData({...docSnap.data(), address: docSnap.data().location})
+        setLoading(false);
+      }
+      else{
+        setLoading(false);
+        navigate('/');
+        toast.info("Listing doesn't exist!")
+      }
+    }
+
+    fetchListing();
+  }, [params.listingId, navigate])
 
   useEffect(() => {
     if(isMounted){
@@ -189,9 +221,11 @@ function CreateListing() {
     Data.type !== 'pg' && delete Data.food;
     Data.type !== 'pg' && delete Data.sharing;
 
-    const docRef = await addDoc(collection(db, 'listings'), Data);
+    //update doc
+    const docRef = doc(db, 'listings', params.listingId);
+    await updateDoc(docRef, formData)
     setLoading(false);
-    toast.success("Listing Created!");
+    toast.success("Listing Edited!");
     navigate(`/category/${Data.type}/${docRef.id}`);
   }
 
@@ -203,7 +237,7 @@ function CreateListing() {
     <div className='bg-base-200'>
         <form className='flex justify-center py-12 px-5' onSubmit={onSubmit}>
         <div className="card flex flex-shrink-0 w-full max-w-sm shadow-lg bg-base-100 md:max-w-xl">
-        <h1 className='text-4xl font-bold text-center pt-5'>Create Listing</h1>
+        <h1 className='text-4xl font-bold text-center pt-5'>Edit Listing</h1>
         <div className="card-body">
           <div className="form-control">
             <label className="label">
@@ -309,6 +343,37 @@ function CreateListing() {
             </div>
           </div>
           )}
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-semibold">Listing images</span>
+            </label>
+            <p style={{ paddingLeft: '5px', fontSize: '0.8rem' }} className="mb-2">
+              DELETE: Check the box of each image you wish to delete
+            </p>
+            <div className="editListingImgContainer">
+             {listing?.imageUrls &&
+              listing.imageUrls.map((img, index) => (
+                <div
+                  key={index}
+                  className="editListingImg"
+                  style={{
+                    background: `url(${img}) center no-repeat`,
+                    backgroundSize: 'cover',
+                  }}
+                >
+                  {index === 0 && <p className="editListingImgText">Cover</p>}
+ 
+                  <input
+                    type="checkbox"
+                    id="imageDelete"
+                    name="imageDelete"
+                    value={img}
+                    // onChange={}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
           <div className="form-control flex justify-center">
             <label className="label">
               <span className="label-text font-semibold">Images (Max: 4)</span>
@@ -340,4 +405,4 @@ function CreateListing() {
   )
 }
 
-export default CreateListing
+export default EditListing

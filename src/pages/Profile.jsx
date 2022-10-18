@@ -4,7 +4,7 @@ import { db } from '../firebase.config';
 import{useState, useEffect} from 'react';
 import {FaUserTie, FaUser, FaHome} from 'react-icons/fa'
 import {toast} from 'react-toastify'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import Loader from '../components/Loader'
 import ProfileListingItem from '../components/ProfileListingItem';
 import { getStorage, ref, deleteObject } from "firebase/storage";
@@ -18,6 +18,7 @@ function Profile() {
     name: auth.currentUser.displayName,
     email: auth.currentUser.email
   });
+  const navigate = useNavigate();
 
   const {name,email} = userData;
 
@@ -64,6 +65,10 @@ function Profile() {
     } catch (e) {
       toast.info("Something Went Wrong!")
     }
+  }
+
+  const onEdit = (listingId) => {
+    navigate(`/edit-listing/${listingId}`)
   }
 
   useEffect(() => {
@@ -166,6 +171,7 @@ function Profile() {
                       id={listing.id}
                       listing={listing.data}
                       onDelete={() => onDelete(listing.id)}
+                      onEdit={() => onEdit(listing.id)}
                       />
                     ))}
                   </>
