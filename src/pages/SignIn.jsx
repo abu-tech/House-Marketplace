@@ -42,7 +42,13 @@ function SignIn() {
   <div className="hero-content flex-col lg:flex-row-reverse">
     <div className="text-center lg:text-left">
       <h1 className="font-bold text-4xl">Welcome Back!</h1>
-      <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+      <p className="py-6">
+        Find the best Flat,PG for you
+        Make the most of high seller scores
+        Experience a joyful journey
+        or
+        Sell/Rent your properties for free!
+      </p>
     </div>
     <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
       <div className="card-body">
