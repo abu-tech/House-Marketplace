@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'
 import {collection, getDocs, query, where, orderBy, limit, startAfter} from 'firebase/firestore'
 import { db } from '../firebase.config'
 import { toast } from 'react-toastify'
-import Spinner from '../components/Spinner'
+import Loader from '../components/Loader'
 import ListingItem from '../components/ListingItem'
 
 function Offers() {
@@ -82,7 +82,7 @@ function Offers() {
     }
 
 
-  return loading ? <Spinner /> : listings && listings.length > 0 ? 
+  return loading ? <Loader /> : listings && listings.length > 0 ? 
   
     (
     <div className='bg-base-200 p-8'>
