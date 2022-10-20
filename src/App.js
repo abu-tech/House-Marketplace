@@ -1,5 +1,6 @@
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import Explore from './pages/Explore'
 import Profile from './pages/Profile'
 import Offers from './pages/Offers'
@@ -39,6 +40,7 @@ function App() {
           <Route path='/contact/:landlordId' element={<Contact />} />
           <Route path='/*' element={<NotFound />}/>
         </Routes>
+        <Footer />
       </Router>
       <ToastContainer
       position="top-center"
