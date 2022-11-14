@@ -6,7 +6,7 @@ import Slider from '../components/Slider'
 
 function Explore() {
   return (
-  <div className='h-screen bg-base-200'>
+  <div className='bg-base-200'>
     <h1 className='text-2xl font-bold text-center pt-5'>Explore Categories</h1>
     <Slider />
     <div className='flex flex-col items-center bg-base-200 lg:flex-row lg:justify-center'>  
